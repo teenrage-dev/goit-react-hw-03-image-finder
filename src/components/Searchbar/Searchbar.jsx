@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 export class Searchbar extends Component {
   state = {
     value: '',
+    // page: 1,
   };
 
   handleChange = e => {
@@ -21,7 +22,7 @@ export class Searchbar extends Component {
       this.setState({ value: '' });
       return;
     }
-
+    // console.log(this.props);
     this.props.onSubmit(value);
     this.setState({ value: '' });
   };

@@ -3,6 +3,8 @@ import css from './ImageGallery.module.css';
 import { InfinitySpin } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
 import MovingComponent from 'react-moving-text';
+import { Button } from 'components/Button/Button';
+import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 
 // 'idle', 'pending', 'resolved', 'rejected'
 
@@ -10,17 +12,30 @@ export class ImageGallery extends Component {
   state = {
     photo: null,
     status: 'idle',
+    page: 1,
+    error: null,
   };
 
-  componentDidUpdate(prevProps) {
-    const { value } = this.props;
+  loadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
 
-    if (prevProps.value !== value) {
+  componentDidUpdate(prevProps, prevState) {
+    const { value } = this.props;
+    const { page } = this.state;
+
+    console.log(prevState.page, page);
+
+    if (prevProps.value !== value || prevState.page !== page) {
+      console.log(page);
+
       this.setState({
         status: 'pending',
       });
       fetch(
-        `https://pixabay.com/api/?q=${value}&page=1&key=28032528-2733f4db32465b2bae0fa9703&image_type=photo&orientation=horizontal&per_page=12`
+        `https://pixabay.com/api/?q=${value}&page=${page}&key=28032528-2733f4db32465b2bae0fa9703&image_type=photo&orientation=horizontal&per_page=12`
       )
         .then(res => {
           console.log(res);
@@ -34,10 +49,8 @@ export class ImageGallery extends Component {
           );
         })
         .then(data => {
-          console.log(data);
-
           if (data.hits.length === 0) {
-            toast.error('Error: No results found.');
+            return Promise.reject(new Error(`No results found.`));
           }
           return this.setState({
             photo: data,
@@ -45,16 +58,16 @@ export class ImageGallery extends Component {
           });
         })
         .catch(err => {
-          // this.setState({
-          //   status: 'rejected',
-          // });
-          toast.error(`${err}`);
+          this.setState({
+            status: 'rejected',
+            error: err,
+          });
         });
     }
   }
 
   render() {
-    const { photo, status } = this.state;
+    const { photo, status, error } = this.state;
 
     if (status === 'idle') {
       return (
@@ -82,41 +95,21 @@ export class ImageGallery extends Component {
       );
     }
 
-    if (status === 'resolved') {
-      return (
-        <ul className={css.ImageGallery}>
-          {photo.hits.map(item => {
-            return (
-              <li className={css.ImageGalleryItem} key={item.id}>
-                <img
-                  src={item.webformatURL}
-                  alt={item.tags}
-                  className={css.ImageGalleryItemImage}
-                />
-              </li>
-            );
-          })}
-        </ul>
-      );
+    if (status === 'rejected') {
+      return <div>{toast.error(`${error}`)}</div>;
     }
 
-    // return (
-    //   <>
-    //     <ul className={css.ImageGallery}>
-    //       {this.state.photo &&
-    //         photo.hits.map(item => {
-    //           return (
-    //             <li className={css.ImageGalleryItem} key={item.id}>
-    //               <img
-    //                 src={item.webformatURL}
-    //                 alt={item.tags}
-    //                 className={css.ImageGalleryItemImage}
-    //               />
-    //             </li>
-    //           );
-    //         })}
-    //     </ul>
-    //   </>
-    // );
+    if (status === 'resolved') {
+      return (
+        <>
+          <ul className={css.ImageGallery}>
+            {photo.hits.map(item => {
+              return <ImageGalleryItem item={item} />;
+            })}
+          </ul>
+          <Button onClick={this.loadMore} />
+        </>
+      );
+    }
   }
 }
