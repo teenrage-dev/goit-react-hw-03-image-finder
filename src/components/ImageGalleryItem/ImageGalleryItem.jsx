@@ -3,16 +3,9 @@ import css from './ImageGalleryItem.module.css';
 import PropTypes from 'prop-types';
 
 export class ImageGalleryItem extends Component {
-  // state = {
-  //   largeImageURL: '',
-  // };
-
   static propTypes = {
     photo: PropTypes.array,
-    onOpen: PropTypes.func.isRequired,
   };
-  тз;
-  // componentDidUpdate(prevProps, prevState) {}
 
   render() {
     const { photo } = this.props;

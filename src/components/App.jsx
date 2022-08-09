@@ -76,7 +76,6 @@ export class App extends Component {
   };
 
   handleClickList = e => {
-    console.dir(e.target);
     if (e.target.tagName === 'IMG') {
       this.openModal(e.target.dataset.largeImg);
     }

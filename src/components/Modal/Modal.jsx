@@ -8,7 +8,7 @@ const modalRoot = document.querySelector('#modal-root');
 export class Modal extends Component {
   static propTypes = {
     largeImgURL: PropTypes.string.isRequired,
-    onclose: PropTypes.func.isRequired,
+    onclose: PropTypes.func,
   };
 
   componentDidMount() {
