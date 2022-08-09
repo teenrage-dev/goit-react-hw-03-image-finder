@@ -1,10 +1,16 @@
 import { Component } from 'react';
 import { createPortal } from 'react-dom';
 import css from './Modal.module.css';
+import PropTypes from 'prop-types';
 
 const modalRoot = document.querySelector('#modal-root');
 
 export class Modal extends Component {
+  static propTypes = {
+    largeImgURL: PropTypes.string.isRequired,
+    onclose: PropTypes.func.isRequired,
+  };
+
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
     // window.addEventListener('click', this.handleBackdropClick);
@@ -17,7 +23,6 @@ export class Modal extends Component {
   handleKeyDown = e => {
     if (e.code === 'Escape') {
       this.props.onClose();
-      console.log('esc');
     }
   };
   handleBackdropClick = e => {

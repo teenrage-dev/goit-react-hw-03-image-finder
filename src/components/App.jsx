@@ -28,11 +28,7 @@ export class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { page, value } = this.state;
 
-    // console.log(prevState.page, page);
-
     if (prevState.value !== value || prevState.page !== page) {
-      // console.log(page);
-
       this.setState({
         status: 'pending',
       });
@@ -40,7 +36,6 @@ export class App extends Component {
         `https://pixabay.com/api/?q=${value}&page=${page}&key=28032528-2733f4db32465b2bae0fa9703&image_type=photo&orientation=horizontal&per_page=12`
       )
         .then(res => {
-          // console.log(res);
           if (res.ok) {
             return res.json();
           }
@@ -96,7 +91,6 @@ export class App extends Component {
   render() {
     const { status, photo, isOpen, error, largeImgURL } = this.state;
 
-    console.log(largeImgURL);
     return (
       <div className={css.App}>
         <Searchbar onSubmit={this.handleSubmitForm} />

@@ -1,11 +1,16 @@
 import css from './Searchbar.module.css';
 import React, { Component } from 'react';
 import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 
 export class Searchbar extends Component {
   state = {
     value: '',
     // page: 1,
+  };
+
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
   };
 
   handleChange = e => {
