@@ -25,6 +25,13 @@ export class App extends Component {
     largeImgURL: '',
   };
 
+  componentDidMount() {
+    window.addEventListener('click', this.handleClickList);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('click', this.handleClickList);
+  }
+
   componentDidUpdate(prevProps, prevState) {
     const { page, value } = this.state;
 
@@ -66,6 +73,13 @@ export class App extends Component {
 
   handleSubmitForm = value => {
     this.setState({ value, page: 1 });
+  };
+
+  handleClickList = e => {
+    console.dir(e.target);
+    if (e.target.tagName === 'IMG') {
+      this.openModal(e.target.dataset.largeImg);
+    }
   };
 
   loadMore = () => {
@@ -131,7 +145,7 @@ export class App extends Component {
         {status === 'resolved' && (
           <>
             <ul id="ImageGallery" className={css.ImageGallery}>
-              <ImageGalleryItem photo={photo} onOpen={this.openModal} />
+              <ImageGalleryItem photo={photo} />
             </ul>
             <Button onClick={this.loadMore} />
             {isOpen && (
