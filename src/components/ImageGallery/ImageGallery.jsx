@@ -5,8 +5,11 @@ import { toast } from 'react-toastify';
 import MovingComponent from 'react-moving-text';
 import { Button } from 'components/Button/Button';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
+import { Modal } from 'components/Modal/Modal';
 
 // 'idle', 'pending', 'resolved', 'rejected'
+
+// const ImageGalleryList = document.querySelector('#ImageGallery');
 
 export class ImageGallery extends Component {
   state = {
@@ -14,12 +17,7 @@ export class ImageGallery extends Component {
     status: 'idle',
     page: 1,
     error: null,
-  };
-
-  loadMore = () => {
-    this.setState(prevState => ({
-      page: prevState.page + 1,
-    }));
+    isOpen: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -52,10 +50,11 @@ export class ImageGallery extends Component {
           if (data.hits.length === 0) {
             return Promise.reject(new Error(`No results found.`));
           }
-          return this.setState({
-            photo: data,
+          return this.setState(prevState => ({
+            photo:
+              page === 1 ? [...data.hits] : [...prevState.photo, ...data.hits],
             status: 'resolved',
-          });
+          }));
         })
         .catch(err => {
           this.setState({
@@ -66,8 +65,20 @@ export class ImageGallery extends Component {
     }
   }
 
+  loadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+    }));
+  };
+
+  toggleModal = () => {
+    this.setState(({ isOpen }) => ({
+      isOpen: !isOpen,
+    }));
+  };
+
   render() {
-    const { photo, status, error } = this.state;
+    const { photo, status, error, isOpen } = this.state;
 
     if (status === 'idle') {
       return (
@@ -96,18 +107,22 @@ export class ImageGallery extends Component {
     }
 
     if (status === 'rejected') {
-      return <div>{toast.error(`${error}`)}</div>;
+      return toast.error(`${error}`);
     }
 
     if (status === 'resolved') {
       return (
         <>
-          <ul className={css.ImageGallery}>
-            {photo.hits.map(item => {
-              return <ImageGalleryItem item={item} />;
-            })}
+          <ul id="ImageGallery" className={css.ImageGallery}>
+            <ImageGalleryItem photo={photo} onOpen={this.toggleModal} />
           </ul>
+          {/* <ul className={css.ImageGallery}>
+            {photo.hits.map(item => {
+              return <ImageGalleryItem item={item} onOpen={this.toggleModal} />;
+            })}
+          </ul> */}
           <Button onClick={this.loadMore} />
+          {isOpen && <Modal onClose={this.toggleModal} />}
         </>
       );
     }

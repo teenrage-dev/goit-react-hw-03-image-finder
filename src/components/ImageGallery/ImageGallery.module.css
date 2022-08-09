@@ -1,11 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
 
-.ImageGalleryContainer {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-}
-
 .ImageGallery {
   display: grid;
   max-width: calc(100vw - 48px);
@@ -17,6 +11,12 @@
   list-style: none;
   margin-left: auto;
   margin-right: auto;
+}
+
+.ImageGalleryContainer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
 }
 
 .ImageGalleryWrapper {

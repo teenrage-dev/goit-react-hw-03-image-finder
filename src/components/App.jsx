@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import css from './App.module.css';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
+// import { Modal } from './Modal/Modal';
 
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -24,13 +25,20 @@ export class App extends Component {
   //   this.setState({ page });
   // };
 
+  // toggleModal = () => {
+  //   this.setState(prevState => ({
+  //     isOpen: !prevState.isOpen,
+  //   }));
+  // };
+
   render() {
+    const { value } = this.state;
     return (
       <div className={css.App}>
         <Searchbar onSubmit={this.handleSubmitForm} />
         <ToastContainer
           position="top-right"
-          autoClose={5000}
+          autoClose={3000}
           hideProgressBar={false}
           newestOnTop={false}
           closeOnClick
@@ -40,8 +48,9 @@ export class App extends Component {
           pauseOnHover
           theme="colored"
         />
-        <ImageGallery value={this.state.value} />
+        <ImageGallery value={value} />
         {/* <Button onClick={this.loadMore} /> */}
+        {/* {isOpen && <Modal onClick={this.toggleModal} />} */}
       </div>
     );
   }
